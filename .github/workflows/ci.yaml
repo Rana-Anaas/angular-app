@@ -39,4 +39,4 @@ jobs:
           SOURCE: "dist/my-angular-app/"
           REMOTE_HOST: "13.233.152.138"
           REMOTE_USER: "ubuntu"
-          TARGET: "/var/www/html/my-angular-app/"
+          TARGET: "/var/www/html/angular-demo/"
