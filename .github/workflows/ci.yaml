@@ -36,7 +36,7 @@ jobs:
         uses: easingthemes/ssh-deploy@v2.1.5
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}}
-          SOURCE: "dist/angular-demo/"
+          SOURCE: "dist/my-angular-app/"
           REMOTE_HOST: "13.233.152.138"
           REMOTE_USER: "ubuntu"
-          TARGET: "/var/www/html/angular-demo/"
+          TARGET: "/var/www/html/my-angular-app/"
