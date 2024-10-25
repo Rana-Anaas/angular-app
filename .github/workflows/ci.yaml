@@ -22,6 +22,10 @@ jobs:
         run: npm run build:prod
       - name: Check Build Output
         run: ls -R ${{ github.workspace }}/dist
+      - name: Display Workspace Path
+        run: echo "${{ github.workspace }}"
+
+
 
   # Production Deployment
   production-deploy:
