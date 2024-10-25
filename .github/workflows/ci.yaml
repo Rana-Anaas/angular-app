@@ -1,4 +1,5 @@
 name: CI
+
 on:
   push:
     branches: [main]
@@ -6,37 +7,31 @@ on:
     branches: [main]
 
 jobs:
+  # Build stage
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./
     steps:
       - uses: actions/checkout@v3
-        with:
-          node-version: "20"
       - uses: actions/setup-node@v3
         with:
           node-version: "20"
-      - uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: NPM Install
+      - name: Install Dependencies
         run: npm install
-      - name: NPM Install Angular
-        run: npm install -g @angular/cli > /dev/null
-      - name: NPM build Angular Production
+      - name: Build Angular App
         run: npm run build:prod
-      - name: lint
-        run: npm run lint
-      - name: Deploy to my EC2 instance
+
+  # Staging Deployment
+
+  # Production Deployment
+  production-deploy:
+    needs: staging-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Production EC2 instance
         uses: easingthemes/ssh-deploy@v2.1.5
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY}}
+          SSH_PRIVATE_KEY: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
           SOURCE: "dist/my-angular-app/"
-          REMOTE_HOST: "13.233.152.138"
+          REMOTE_HOST: "13.233.152.138"  # Production IP
           REMOTE_USER: "ubuntu"
           TARGET: "/var/www/html/angular-demo/"
