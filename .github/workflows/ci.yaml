@@ -20,6 +20,9 @@ jobs:
         run: npm install
       - name: Build Angular App
         run: npm run build:prod
+      - name: Search for Build Output Directory
+        run: find ${{ github.workspace }} -type d \( -name "dist" -o -name "my-angular-app" \)
+
       - name: Check Build Output
         run: ls -R ${{ github.workspace }}/dist
       - name: Display Workspace Path
