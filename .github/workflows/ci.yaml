@@ -46,7 +46,7 @@ jobs:
       - name: Deploy to Production EC2 instance
         uses: easingthemes/ssh-deploy@v2.1.5
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SOURCE: "${{ github.workspace }}/dist/my-angular-app/browser/"
           REMOTE_HOST: "13.233.152.138"  # Production IP
           REMOTE_USER: "ubuntu"
