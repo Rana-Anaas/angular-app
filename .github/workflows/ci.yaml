@@ -19,24 +19,39 @@ jobs:
         run: npm install
       - name: Build Angular App
         run: npm run build:prod
-      - name: List dist directory contents
-        run: ls -R dist 
-      - name: Check Full Directory Structure
-        run: ls -R /home/runner/work/angular-app/angular-app/dist
-  
 
-  # Staging Deployment
+  # Staging Deployment (Optional: Uncomment if needed)
+  # staging-deploy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy to Staging EC2 instance
+  #       uses: easingthemes/ssh-deploy@v2.1.5
+  #       with:
+  #         SSH_PRIVATE_KEY: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+  #         SOURCE: "${{ github.workspace }}/dist/my-angular-app/browser/"
+  #         REMOTE_HOST: "staging_ip_address"  # Replace with your staging IP
+  #         REMOTE_USER: "ubuntu"
+  #         TARGET: "/path/to/staging/directory"
 
   # Production Deployment
   production-deploy:
-    needs: build
     runs-on: ubuntu-latest
+    needs: build
     steps:
+      - name: Check Permissions
+        run: ls -ld ${{ github.workspace }}/dist/my-angular-app/browser
+
       - name: Deploy to Production EC2 instance
         uses: easingthemes/ssh-deploy@v2.1.5
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SOURCE: "dist/my-angular-app/browser/"
+          SSH_PRIVATE_KEY: ${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}
+          SOURCE: "${{ github.workspace }}/dist/my-angular-app/browser/"
           REMOTE_HOST: "13.233.152.138"  # Production IP
           REMOTE_USER: "ubuntu"
           TARGET: "/var/www/html/angular-demo/"
+
+      - name: Debug Rsync Command
+        run: |
+          rsync -avz --dry-run --rsh "ssh -p 22 -i /home/runner/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+          ${{ github.workspace }}/dist/my-angular-app/browser/ \
+          ubuntu@13.233.152.138:/var/www/html/angular-demo/
