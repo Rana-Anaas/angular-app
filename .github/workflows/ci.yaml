@@ -1,48 +1,39 @@
 
-name: CI
+name: Production Deployment
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  # Build stage
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-      - name: Install Dependencies
-        run: npm install
-      - name: Build Angular App
-        run: npm run build:prod
-      - name: Search for Build Output Directory
-        run: find ${{ github.workspace }} -type d \( -name "dist" -o -name "my-angular-app" \)
-
-      - name: Check Build Output
-        run: ls -R ${{ github.workspace }}/dist
-      - name: Display Workspace Path
-        run: echo "${{ github.workspace }}"
-
-
-
-  # Production Deployment
   production-deploy:
     runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Check Permissions
-        run: ls -ld ${{ github.workspace }}/dist/my-angular-app/
 
-      - name: Deploy to Production EC2 instance
-        uses: easingthemes/ssh-deploy@v2.1.5
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SOURCE: "${{ github.workspace }}/dist/my-angular-app/"
-          REMOTE_HOST: "13.233.152.138"
-          REMOTE_USER: "ubuntu"
-          TARGET: "/var/www/html/angular-demo/"
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Angular Project
+      run: npm run build --if-present
+
+    - name: Verify Build Directory
+      run: ls -ld ${{ github.workspace }}/dist/my-angular-app/
+
+    - name: Deploy to EC2
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rltgoDzvO --delete"
+        SOURCE: "${{ github.workspace }}/dist/my-angular-app/"
+        REMOTE_HOST: "13.233.152.138"
+        REMOTE_USER: "ec2-user"
+        TARGET: "/var/www/html/angular-demo/"
