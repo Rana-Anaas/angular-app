@@ -21,6 +21,10 @@ jobs:
         run: npm run build:prod
       - name: List Build Output
         run: ls -R ${{ github.workspace }}/dist  # Verify output structure
+      - name: List Contents of Build Directory
+        run: |
+          echo "Listing contents of build directory:"
+          ls -R ${{ github.workspace }}/dist/my-angular-app/
 
   # Staging Deployment (Optional: Uncomment if needed)
   # staging-deploy:
