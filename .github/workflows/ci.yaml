@@ -19,6 +19,8 @@ jobs:
         run: npm install
       - name: Build Angular App
         run: npm run build:prod
+      - name: List Build Output
+        run: ls -R ${{ github.workspace }}/dist  # Verify output structure
 
   # Staging Deployment (Optional: Uncomment if needed)
   # staging-deploy:
@@ -39,7 +41,7 @@ jobs:
     needs: build
     steps:
       - name: Check Permissions
-        run: ls -ld ${{ github.workspace }}/dist/my-angular-app/browser
+        run: ls -ld ${{ github.workspace }}/dist/my-angular-app/browser || echo "Directory not found."
 
       - name: Deploy to Production EC2 instance
         uses: easingthemes/ssh-deploy@v2.1.5
@@ -55,3 +57,4 @@ jobs:
           rsync -avz --dry-run --rsh "ssh -p 22 -i /home/runner/.ssh/deploy_key -o StrictHostKeyChecking=no" \
           ${{ github.workspace }}/dist/my-angular-app/browser/ \
           ubuntu@13.233.152.138:/var/www/html/angular-demo/
+
