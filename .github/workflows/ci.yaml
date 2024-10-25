@@ -29,13 +29,13 @@ jobs:
     needs: build
     steps:
       - name: Check Permissions
-        run: ls -ld ${{ github.workspace }}/dist/my-angular-app/browser/
+        run: ls -ld ${{ github.workspace }}/dist/my-angular-app/
 
       - name: Deploy to Production EC2 instance
         uses: easingthemes/ssh-deploy@v2.1.5
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SOURCE: "${{ github.workspace }}/dist/my-angular-app/browser/"
+          SOURCE: "${{ github.workspace }}/dist/my-angular-app/"
           REMOTE_HOST: "13.233.152.138"
           REMOTE_USER: "ubuntu"
           TARGET: "/var/www/html/angular-demo/"
