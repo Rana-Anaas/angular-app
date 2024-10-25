@@ -19,6 +19,8 @@ jobs:
         run: npm install
       - name: Build Angular App
         run: npm run build:prod
+      - name: List dist directory contents
+        run: ls -R dist 
 
   # Staging Deployment
 
