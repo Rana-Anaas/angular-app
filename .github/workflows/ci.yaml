@@ -35,5 +35,5 @@ jobs:
         ARGS: "-rltgoDzvO --delete"
         SOURCE: "${{ github.workspace }}/dist/my-angular-app/"
         REMOTE_HOST: "13.233.152.138"
-        REMOTE_USER: "ec2-user"
+        REMOTE_USER: "ubuntu"
         TARGET: "/var/www/html/angular-demo/"
