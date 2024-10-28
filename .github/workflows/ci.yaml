@@ -24,19 +24,29 @@ jobs:
 
     - name: Build Angular Project
       run: npm run build --if-present
+    - name: Verify Build Directory
+      run: |
+        echo "Checking build output directory:"
+        ls -ld "${{ github.workspace }}/dist/my-angular-app/"
+    
+    - name: List Build Files
+      run: |
+        echo "Listing files in build directory:"
+        ls -l "${{ github.workspace }}/dist/my-angular-app/"
+
 
     
-    - name: print path
-      run: echo "${{ github.workspace }}/dist/my-angular-app/"
-    - name: Verify Build Directory
-      run: ls -ld ${{ github.workspace }}/dist/my-angular-app/
+    # - name: print path
+    #   run: echo "${{ github.workspace }}/dist/my-angular-app/"
+    # - name: Verify Build Directory
+    #   run: ls -ld ${{ github.workspace }}/dist/my-angular-app/
 
-    - name: Deploy to EC2
-      uses: easingthemes/ssh-deploy@v2.1.5
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        ARGS: "-rltgoDzvO --delete"
-        SOURCE: "${{ github.workspace }}/dist/my-angular-app/"
-        REMOTE_HOST: "13.233.152.138"
-        REMOTE_USER: "ubuntu"
-        TARGET: "/var/www/html/angular-demo/"
+    # - name: Deploy to EC2
+    #   uses: easingthemes/ssh-deploy@v2.1.5
+    #   env:
+    #     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    #     ARGS: "-rltgoDzvO --delete"
+    #     SOURCE: "${{ github.workspace }}/dist/my-angular-app/"
+    #     REMOTE_HOST: "13.233.152.138"
+    #     REMOTE_USER: "ubuntu"
+    #     TARGET: "/var/www/html/angular-demo/"
