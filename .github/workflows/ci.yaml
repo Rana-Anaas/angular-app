@@ -25,6 +25,9 @@ jobs:
     - name: Build Angular Project
       run: npm run build --if-present
 
+    
+    - name: print path
+      run: echo "${{ github.workspace }}/dist/my-angular-app/"
     - name: Verify Build Directory
       run: ls -ld ${{ github.workspace }}/dist/my-angular-app/
 
